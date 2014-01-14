@@ -1,4 +1,4 @@
-package org.myftp.gattserver.csi.palette.factories
+package org.myftp.gattserver.csi.world.factories
 
 import scala.util.Random
 import org.myftp.gattserver.csi.palette.FirstName
@@ -15,5 +15,8 @@ object FirstNameFactory {
     val randomIndex = random.nextInt(list.size);
     return FirstName(list(randomIndex));
   }
+  
+  def getRandomMaleName() = getRandomName(true);
+  def getRandomFemaleName() = getRandomName(false);
 
 }

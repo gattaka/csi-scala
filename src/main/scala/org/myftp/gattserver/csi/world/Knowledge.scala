@@ -5,27 +5,31 @@ import scala.collection.mutable.HashMap
 
 class Knowledge {
 
-  val persons = new HashSet[Person];
-  val relationsByRelation = new HashMap[RelationType, HashMap[Person, HashSet[Person]]];
-  val relationsByPerson = new HashMap[Person, HashMap[RelationType, HashSet[Person]]];
+  private type PPrelation = HashMap[Person, HashSet[Person]]
+  private type RPrelation = HashMap[RelationType, HashSet[Person]]
+  private type Persons = HashSet[Person]
 
-  def related(holdingPerson: Person, relationType: RelationType): HashSet[Person] = {
+  val persons = new Persons;
+  val relationsByRelation = new HashMap[RelationType, PPrelation];
+  val relationsByPerson = new HashMap[Person, RPrelation];
+
+  def related(holdingPerson: Person, relationType: RelationType): Persons = {
+    if (relationsByPerson.contains(holdingPerson) == false) return null;
     val relations = relationsByPerson(holdingPerson);
-    if (relations == null) return null;
-    return relations(relationType);
+    return if (relations.contains(relationType)) relations(relationType) else null;
   }
 
   def isInRelation(holdingPerson: Person, relationType: RelationType, targetPerson: Person = null): Boolean = {
+    if (relationsByPerson.contains(holdingPerson) == false) return false;
     val relations = relationsByPerson(holdingPerson);
-    if (relations == null) return false;
+    if (relations.contains(relationType) == false) return false;
     val persons = relations(relationType);
-    if (persons == null) return false;
     if (targetPerson == null)
       return persons.isEmpty == false;
     return persons.contains(targetPerson);
   }
 
-  def checkBannedRelations(holdingPerson: Person, targetPerson: Person, relationTypes: List[RelationType]): Boolean = {
+  def checkBannedRelations(holdingPerson: Person, targetPerson: Person, relationTypes: RelationType*): Boolean = {
     for (relationType <- relationTypes) {
       val persons = related(holdingPerson, relationType);
       if (persons != null) {
@@ -49,28 +53,28 @@ class Knowledge {
   }
 
   private def registerRelationByRelation(relationType: RelationType, holdingPerson: Person, targetPerson: Person) {
-    var relations = relationsByRelation(relationType);
+    var relations: PPrelation = if (relationsByRelation.contains(relationType)) relationsByRelation(relationType) else null;
     if (relations == null) {
-      relations = new HashMap[Person, HashSet[Person]];
+      relations = new PPrelation;
       relationsByRelation.put(relationType, relations);
     }
-    var targetPersons = relations(holdingPerson);
+    var targetPersons: Persons = if (relations.contains(holdingPerson)) relations(holdingPerson) else null;
     if (targetPersons == null) {
-      targetPersons = new HashSet[Person];
+      targetPersons = new Persons;
       relations.put(holdingPerson, targetPersons);
     }
     targetPersons.add(targetPerson);
   }
 
   private def registerRelationByHoldingPerson(relationType: RelationType, holdingPerson: Person, targetPerson: Person) {
-    var relations = relationsByPerson(holdingPerson);
+    var relations: RPrelation = if (relationsByPerson.contains(holdingPerson)) relationsByPerson(holdingPerson) else null;
     if (relations == null) {
-      relations = new HashMap[RelationType, HashSet[Person]];
+      relations = new RPrelation;
       relationsByPerson.put(holdingPerson, relations);
     }
-    var targetPersons = relations(relationType);
+    var targetPersons: Persons = if (relations.contains(relationType)) relations(relationType) else null;
     if (targetPersons == null) {
-      targetPersons = new HashSet[Person];
+      targetPersons = new Persons;
       relations.put(relationType, targetPersons);
     }
     targetPersons.add(targetPerson);

@@ -1,4 +1,4 @@
-package org.myftp.gattserver.csi.palette.factories
+package org.myftp.gattserver.csi.world.factories
 
 import scala.util.Random
 import org.myftp.gattserver.csi.palette.SureName
@@ -9,7 +9,7 @@ object SureNameFactory {
 
   private val random = new Random();
 
-  def getRandomName(male: Boolean): SureName = {
+  def getRandomName(): SureName = {
     val randomIndex = random.nextInt(sureNames.size);
     return SureName(sureNames(randomIndex));
   }

@@ -23,7 +23,7 @@ case class Person(firstName: FirstName, sureName: SureName,
   //  val male: Boolean;
 
   val knowledge: Knowledge = new Knowledge();
-  val fingerprint: Int = hashCode();
+  val fingerprint: Int = super.hashCode();
 
   def age: Double = {
     return age(0);

@@ -1,4 +1,4 @@
-package org.myftp.gattserver.csi.palette.factories
+package org.myftp.gattserver.csi.world.factories
 
 import scala.util.Random
 import org.myftp.gattserver.csi.palette.Address

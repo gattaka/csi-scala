@@ -1,6 +1,5 @@
-package org.myftp.gattserver.csi.world.factories
+package org.myftp.gattserver.csi.world
 
-import org.myftp.gattserver.csi.world.Person
 import org.myftp.gattserver.csi.palette.FirstName
 import org.myftp.gattserver.csi.palette.SureName
 import java.util.Date

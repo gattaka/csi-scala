@@ -3,7 +3,7 @@ package org.myftp.gattserver.csi.world
 import scala.collection.mutable.HashSet
 import scala.collection.Set
 
-object World {
+class World {
 
   var population = 0;
   var numberOfMales = 0;
@@ -41,7 +41,15 @@ object World {
       minimumAge = age;
 
     averageAge = sumOfAges / population;
-    knowledge.persons.add(person);
+    knowledge.persons += person;
+  }
+
+  def registerPublicRelation(relationType: RelationType,
+                             holdingPerson: Person, targetPerson: Person) {
+    knowledge.registerRelation(relationType, holdingPerson, targetPerson);
+    for (person <- persons) {
+      person.knowledge.registerRelation(relationType, holdingPerson, targetPerson);
+    }
   }
 
   /**
